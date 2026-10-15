@@ -1,0 +1,59 @@
+name: Auto-Rig Windows build
+
+on:
+  push:
+    branches: ["ai-auto-rig"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Pull LFS assets
+        shell: pwsh
+        run: git lfs pull
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build native Windows app
+        shell: pwsh
+        run: cargo build --release
+
+      - name: Package Windows ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $dist = "SkelForm-AutoRig-Windows"
+          if (Test-Path $dist) { Remove-Item $dist -Recurse -Force }
+          New-Item -ItemType Directory -Path $dist | Out-Null
+          if (!(Test-Path "target/release/SkelForm.exe")) {
+            throw "Expected executable target/release/SkelForm.exe was not produced."
+          }
+          Copy-Item "target/release/SkelForm.exe" "$dist/SkelForm.exe"
+          Copy-Item "assets" "$dist/assets" -Recurse
+          Copy-Item "samples" "$dist/samples" -Recurse
+          @(
+            "SkelForm Auto-Rig & Animate - Windows x64"
+            "Model: qwen/qwen3.8-27b:free"
+            "Configure the OpenRouter API key at runtime; it is not bundled in this archive."
+            "Run SkelForm.exe from this folder so assets and samples remain alongside the executable."
+          ) | Set-Content "$dist/AUTO-RIG-BUILD.txt" -Encoding UTF8
+          $zip = "$dist.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path "$dist/*" -DestinationPath $zip -CompressionLevel Optimal
+          if (!(Test-Path $zip)) { throw "ZIP package was not created." }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SkelForm-AutoRig-Windows
+          path: SkelForm-AutoRig-Windows.zip
+          if-no-files-found: error
+          retention-days: 14
