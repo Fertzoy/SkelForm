@@ -521,6 +521,9 @@ impl Warning {
 pub struct Ui {
     pub startup: Startup,
 
+    /// Temporary Auto-Rig session state; not part of the .skf project format.
+    pub ai_rig: crate::ai_rig::AiRigUiState,
+
     pub edit_bar: UiBar,
     pub anim_bar: UiBar,
     pub camera_bar: UiBar,
