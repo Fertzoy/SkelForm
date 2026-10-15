@@ -1,3 +1,4 @@
+#![recursion_limit = "512"]
 //! Notable comments:
 //!
 //! `disabled:` - features that have been implemented at some point, but are dormant for a later version. Usually for complex or optional features.
