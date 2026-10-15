@@ -528,7 +528,7 @@ fn request_plan(
     {
         let auth = format!("Bearer {}", api_key.trim());
         let mut response = ureq::post(OPENROUTER_CHAT_URL)
-            .header("Authorization", &auth)
+            .header("Authorization", auth.as_str())
             .header("Content-Type", "application/json")
             .header("HTTP-Referer", "https://skelform.org")
             .header("X-Title", "SkelForm Auto-Rig")
