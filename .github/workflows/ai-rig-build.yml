@@ -1,0 +1,37 @@
+name: Auto-Rig Linux build
+on:
+  push:
+    branches: ["ai-auto-rig"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - name: Pull LFS assets
+        run: git lfs pull
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.6"
+      - name: Build native Linux app
+        run: cd release && python3 release.py --ubuntudeps -nd
+      - name: Verify and package release ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f release/skelform_linux.zip
+          unzip -l release/skelform_linux.zip
+          unzip -Z1 release/skelform_linux.zip | grep -Eq '(^|/)SkelForm$'
+          cp release/skelform_linux.zip SkelForm-AutoRig-Linux.zip
+          printf '%s\n' 'Auto-Rig build' 'Model: qwen/qwen3.8-27b:free' 'The API key is configured at runtime; it is not bundled in this archive.' > AUTO-RIG-BUILD.txt
+          zip -u SkelForm-AutoRig-Linux.zip AUTO-RIG-BUILD.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SkelForm-AutoRig-Linux
+          path: SkelForm-AutoRig-Linux.zip
+          if-no-files-found: error
+          retention-days: 14

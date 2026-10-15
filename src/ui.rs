@@ -26,6 +26,7 @@ pub fn draw(
     selections: &mut SelectionState,
     config: &mut Config,
     events: &mut EventState,
+    undo_states: &mut UndoStates,
     edit_mode: &mut EditMode,
     camera: &Camera,
     armature: &mut Armature,
@@ -39,6 +40,9 @@ pub fn draw(
     shared_ui.cursor_icon = egui::CursorIcon::Default;
 
     default_styling(context, &config);
+
+    // Multimodal Auto-Rig uses SkelForm's actual scene data and undo stack.
+    crate::ai_rig::draw(context, shared_ui, config, events, selections, armature, undo_states, camera);
 
     // context menu
     let is_different = shared_ui.context_menu.id != shared_ui.context_menu.last_id;
@@ -915,6 +919,12 @@ fn context_menu_content(
         }
         if ui.context_button("New Parent", &config).clicked() {
             events.create_parent_bone(split[1].parse().unwrap());
+            shared_ui.context_menu.close();
+        }
+        if ui.context_button("Auto-Rig & Animate", config).clicked() {
+            let bone_id = split[1].parse::<i32>().unwrap_or(-1);
+            let texture_name = armature.bones.iter().find(|bone| bone.id == bone_id).map(|bone| bone.tex.clone()).unwrap_or_default();
+            shared_ui.ai_rig.begin(texture_name, Some(bone_id));
             shared_ui.context_menu.close();
         }
     } else if id == "style" {

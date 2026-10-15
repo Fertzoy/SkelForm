@@ -1,3 +1,4 @@
+#![recursion_limit = "512"]
 //! Notable comments:
 //!
 //! `disabled:` - features that have been implemented at some point, but are dormant for a later version. Usually for complex or optional features.
@@ -52,6 +53,7 @@ use winit::{
 };
 
 pub mod armature_window;
+pub mod ai_rig;
 pub mod atlas_modal;
 pub mod backwards_compat;
 pub mod bone_panel;
@@ -381,7 +383,7 @@ impl ApplicationHandler for App {
                 #[rustfmt::skip]
                 ui::draw(
                     gui_state.egui_ctx(), &mut s.ui, &mut s.input, &mut s.selections,
-                    &mut s.config, &mut s.events, &mut s.edit_mode, &s.camera, &mut s.armature, &s.copy_buffer
+                    &mut s.config, &mut s.events, &mut s.undo_states, &mut s.edit_mode, &s.camera, &mut s.armature, &s.copy_buffer
                 );
 
                 let egui_winit::egui::FullOutput {
