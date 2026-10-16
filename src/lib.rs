@@ -51,6 +51,7 @@ use winit::{
     window::{Theme, Window},
 };
 
+pub mod ai_rig;
 pub mod armature_window;
 pub mod atlas_modal;
 pub mod backwards_compat;

@@ -164,6 +164,9 @@ pub fn draw(
     if shared_ui.donating_modal {
         modal::donating_modal(context, shared_ui, &config);
     }
+    if shared_ui.ai_rig.open && !shared_ui.startup_window {
+        ai_rig::window::draw(context, shared_ui, config, armature, selections, events);
+    }
     if shared_ui.atlas_modal {
         atlas_modal::draw(
             context, config, selections, armature, shared_ui, input, events,
@@ -1044,6 +1047,11 @@ fn top_panel(
             let button = ui.menu_button(str_settings, |ui| ui.close());
             if button.response.clicked() {
                 shared_ui.settings_modal = true;
+            }
+
+            let button = ui.menu_button(title!("Auto-Rig"), |ui| ui.close());
+            if button.response.clicked() {
+                shared_ui.ai_rig.open = !shared_ui.ai_rig.open;
             }
 
             let s_ui = &shared_ui;

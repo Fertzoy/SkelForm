@@ -1106,6 +1106,12 @@ pub fn simple_event(
             armature.tex_data = psd_armature.tex_data.clone();
             *psd_armature = Armature::default();
         }
+        Events::ApplyAiRig => {
+            crate::ai_rig::apply_pending(armature, undo_states, selections, edit_mode, ui);
+        }
+        Events::RevertAiRig => {
+            crate::ai_rig::revert_applied(armature, undo_states, selections, ui);
+        }
         Events::CreateParentBone => {
             // either get the bone ID from event, or selected bones if more than 1
             let mut bones_to_copy = vec![armature.bones[value as usize].id];

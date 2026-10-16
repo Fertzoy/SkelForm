@@ -704,6 +704,9 @@ pub struct Ui {
 
     // prevents keyframe editor from registering clicks while editing tint
     pub bone_panel_popup_open: bool,
+
+    // Auto-Rig window state
+    pub ai_rig: crate::ai_rig::AiRigUi,
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Default, PartialEq, Eq, Debug, Clone)]
@@ -820,6 +823,10 @@ pub struct Config {
     pub rot_snap_step: f32,
     pub bone_translucency: f32,
 
+    // Auto-Rig (OpenRouter)
+    pub ai_model: String,
+    pub ai_api_key: String,
+
     #[serde(skip)]
     pub colors: ColorConfig,
     #[serde(skip)]
@@ -871,6 +878,8 @@ impl Default for Config {
             transform_scale_radius: 0.16,
             rot_snap_step: 22.5,
             bone_translucency: 0.25,
+            ai_model: crate::ai_rig::DEFAULT_MODEL.to_string(),
+            ai_api_key: String::new(),
         }
     }
 }
@@ -2461,6 +2470,8 @@ pub enum Events {
     ToggleSelectedTexture,
     ToggleEditingPivot,
     ReduceGlobalIkFamilyIds,
+    ApplyAiRig,
+    RevertAiRig,
 }
 
 enum_string!(Events);
@@ -2522,6 +2533,8 @@ impl EventState {
     generic_event!(update_render_options, Events::UpdateRenderOptions);
     generic_event!(create_empty_texture, Events::CreateEmptyTexture);
     generic_event!(import_psd_armature, Events::ImportPsdArmature);
+    generic_event!(apply_ai_rig, Events::ApplyAiRig);
+    generic_event!(revert_ai_rig, Events::RevertAiRig);
     generic_event!(delete_selected_keyframes, Events::DeleteSelectedKeyframes);
     generic_event!(global_copy, Events::GlobalCopy);
     generic_event!(global_paste, Events::GlobalPaste);
