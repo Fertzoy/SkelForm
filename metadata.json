@@ -1,0 +1,5 @@
+{
+  "name": "SkelForm - 2D Skeletal Animation Editor",
+  "description": "2D skeletal animator with inverse kinematics, mesh deformation, skins/styles, and keyframe timeline.",
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

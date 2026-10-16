@@ -1,80 +1,31 @@
-# SkelForm
+# SkelForm - 2D Skeletal Animation Editor (React Web Edition)
 
-SkelForm is a 2D skeletal animator, designed for quick and easy integration into
-games or other software with simple techniques and developer-curated runtime
-documentation.
+SkelForm is a 2D skeletal animator designed for quick and easy integration into games or other software with simple techniques and developer-curated runtime documentation.
 
-[skelform.org](https://skelform.org)
+Rewritten from the original Rust/Wasm implementation to a modern, responsive React + TypeScript application with HTML5 Canvas, FABRIK inverse kinematics, multi-track animation keyframing, skins/styles support, and full `.skf` package import/export compatibility.
 
-![example image](assets/readme.png)
+## Features
 
-# Building
+- **2D Skeletal Rigging**: Parent-child bone hierarchy with intuitive tree management, fold/unfold, visibility and lock controls.
+- **Interactive Viewport**: Real-time canvas rendering with Move, Rotate, Scale, and Pivot manipulation gizmos.
+- **FABRIK Inverse Kinematics**: Forward and Backward Reaching Inverse Kinematics solver supporting Clockwise (CW) and Counter-Clockwise (CCW) joint constraints.
+- **Keyframe Timeline**: Multi-track timeline for animating Position, Rotation, Scale, Texture, Z-Index, and Color Tint with easing presets (Linear, Sine-In, Sine-Out, Sine-In-Out, Snap).
+- **Styles & Skins**: Hotswappable texture sets for characters (e.g. outfits, skins, alternate appearances).
+- **Onion Skinning**: Ghosting of previous and next keyframe poses in transparent red and blue.
+- **Full `.skf` Compatibility**: Read and export official zipped `.skf` bundles containing `armature.json`, `editor.json`, and texture atlases.
+- **Spritesheet & Sequence Export**: Generate PNG spritesheet grids or individual frame sequence ZIPs for game engines (Unity, Godot, Phaser, etc.).
+- **Bundled Sample Characters**: Includes the complete *Skellina* and *Skellington* character rigs.
 
-Install Rust v1.85.0 or above.
+## Getting Started
 
-Then, run `cargo run` in the terminal.
+```bash
+npm install
+npm run dev
+```
 
-## Linux
+Dev server runs on `http://localhost:3000`.
 
-Dependencies:
-
-- glib2-dev - required for `rfd` crate (file dialogs)
-- gtk3-dev - ditto above
-
-Library names may be different across distributions.
-
-## Web
-
-Install [Trunk](https://trunkrs.dev) v0.21.7 or above, as well as Python 3.13.6
-or above.
-
-Then, run the `web_build.py` script to build the `dist` folder with the
-necessary files for web distribution.
-
-Notable argument(s):
-
-- `--serve` - Immediately run `localhost:8000` after build.
-- `--release` - Builds for release. Requires changing base url to test locally.
-
-## Mobile
-
-As of 26/05/25, mobile is not actively developed and does not have a direct
-build process.
-
-However, it can be easily done with the web version in a simple WebView wrapper
-(eg [Capacitor](https://capacitorjs.com/)).
-
-Check out the [example repo](https://github.com/Retropaint/skelform_mobile).
-
-The web build script provides a `--mobile` flag for a typical mobile dist
-config.
-
-## Native Desktop Release
-
-Check out the `release` folder for building native releases.
-
-# Documentation
-
-Run `cargo doc --no-deps --open`
-
-This will open a local docs.rs page.
-
-Editor documentation is still sparse. Please check out
-
-- [User documentation](https://skelform.org/user-docs) - Using the editor &
-  runtimes as end-user
-- [Dev documentation](https://skelform.org/dev-docs) - Runtime development (from
-  scratch & integrating)
-
-# Acknowledgements & Attributions
-
-This project was built on top of
-[matthewjberger/wgpu-example](https://github.com/matthewjberger/wgpu-example).
-
-FABRIK technique by
-[Programming Chaos](https://www.youtube.com/watch?v=NfuO66wsuRg)
-
-Inverse Kinematics icon by lucysir
-
-Lock icon provided by
-[boxicons](https://boxicons.com/icons/lock-keyhole?free=true&q=lock-keyhole&p=filled)
+To build for production:
+```bash
+npm run build
+```
